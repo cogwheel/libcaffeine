@@ -1,6 +1,7 @@
 #include "Serialization.hpp"
 
 #include <curl/curl.h>
+#include <libwebsockets.h>
 #include <algorithm>
 #include <chrono>
 #include <mutex>

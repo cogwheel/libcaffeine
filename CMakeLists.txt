@@ -32,6 +32,10 @@ find_package(WebRTC REQUIRED)
 # TODO: use a C++ http library
 find_package(Libcurl REQUIRED)
 
+find_package(Libwebsockets REQUIRED)
+
+find_package(OpenSSL REQUIRED)
+
 ################################################################################
 # Code
 ################################################################################
@@ -116,6 +120,8 @@ set(PRIVATE_INCLUDES
     ${PROJECT_SOURCE_DIR}/third_party/nlohmann_json/single_include
     ${PROJECT_SOURCE_DIR}/third_party/stb
     ${LIBCURL_INCLUDE_DIRS}
+    ${LIBWEBSOCKETS_INCLUDE_DIRS}
+    ${OPENSSL_INCLUDE_DIR}
     ${WEBRTC_INCLUDE_DIR}
     ${WEBRTC_INCLUDE_DIR}/third_party/abseil-cpp
     ${WEBRTC_INCLUDE_DIR}/third_party/libyuv/include
@@ -152,6 +158,9 @@ function(set_target_link_libraries project_name)
     target_link_libraries(${project_name} PRIVATE
         ${X264_LIB}
         ${LIBCURL_LIBRARIES}
+        ${LIBWEBSOCKETS_LIBRARIES}
+        ${OPENSSL_SSL_LIBRARY}
+        ${OPENSSL_CRYPTO_LIBRARY}
         ${WEBRTC_LIBRARIES}
         ${WEBRTC_DEPENDENCIES}
     )
