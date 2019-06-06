@@ -235,4 +235,6 @@ namespace caff {
         }
     }
 
+    void testWebsocket();
+
 }  // namespace caff

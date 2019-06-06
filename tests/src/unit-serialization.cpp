@@ -56,3 +56,8 @@ TEST_CASE("webrtc stats serialize") {
 
     CHECK(serializeWebrtcStats(reports) == expected);
 }
+
+// TODO: Remove. This is temporarily here for quick websocket debugging
+TEST_CASE("websocket") {
+    testWebsocket();
+}

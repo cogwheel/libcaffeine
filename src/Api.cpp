@@ -880,4 +880,48 @@ namespace caff {
         });
     }
 
+    void testWebsocket() {
+        using WebsocketClient = websocketpp::client<websocketpp::config::asio_tls_client>;
+        WebsocketClient client;
+
+        try {
+            client.set_access_channels(websocketpp::log::alevel::all);
+            client.clear_access_channels(websocketpp::log::alevel::frame_payload);
+            client.set_error_channels(websocketpp::log::elevel::all);
+
+            client.init_asio();
+
+            client.set_open_handler([&](websocketpp::connection_hdl connection) {
+                LOG_DEBUG("open");
+                client.send(connection, std::string("test"), websocketpp::frame::opcode::TEXT);
+            });
+
+            client.set_message_handler([](websocketpp::connection_hdl connection, WebsocketClient::message_ptr message) {
+                LOG_DEBUG("message: %s", message->get_payload().c_str());
+            });
+
+            client.set_tls_init_handler([](websocketpp::connection_hdl connection) -> std::shared_ptr<websocketpp::lib::asio::ssl::context> {
+                // TODO: Look more into what should be done here
+                auto context = std::make_shared<asio::ssl::context>(asio::ssl::context::sslv23);
+                context->set_default_verify_paths();
+                context->set_verify_mode(asio::ssl::verify_peer);
+                return context;
+            });
+
+            websocketpp::lib::error_code errorCode;
+            auto connection = client.get_connection("https://echo.websocket.org", errorCode);
+            if (errorCode) {
+                LOG_DEBUG("Could not create websocket connection: %s", errorCode.message().c_str());
+                return;
+            }
+
+            client.connect(connection);
+
+            client.run();
+
+        } catch (websocketpp::exception const & error) {
+            LOG_DEBUG("Websocket error: %s", error.what());
+        }
+    }
+
 } // namespace caff
