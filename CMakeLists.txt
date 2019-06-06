@@ -32,6 +32,14 @@ find_package(WebRTC REQUIRED)
 # TODO: use a C++ http library
 find_package(Libcurl REQUIRED)
 
+find_package(OpenSSL REQUIRED)
+
+# Asio
+find_package(Asio REQUIRED)
+
+# Websocketpp
+find_package(Websocketpp REQUIRED)
+
 ################################################################################
 # Code
 ################################################################################
@@ -70,6 +78,8 @@ set(libcaffeine_SOURCES
     src/X264Encoder.cpp
     src/X264Encoder.hpp
 )
+
+add_definitions(-DASIO_STANDALONE)
 
 if(WIN32)
     add_definitions(-DWIN32_LEAN_AND_MEAN -DNOMINMAX)
@@ -115,6 +125,9 @@ set(PRIVATE_INCLUDES
     ${PROJECT_SOURCE_DIR}/third_party/x264/include #TODO find externally
     ${PROJECT_SOURCE_DIR}/third_party/nlohmann_json/single_include
     ${PROJECT_SOURCE_DIR}/third_party/stb
+    ${OPENSSL_INCLUDE_DIR}
+    ${ASIO_INCLUDE_DIRS}
+    ${WEBSOCKETPP_INCLUDE_DIRS}
     ${LIBCURL_INCLUDE_DIRS}
     ${WEBRTC_INCLUDE_DIR}
     ${WEBRTC_INCLUDE_DIR}/third_party/abseil-cpp
@@ -152,6 +165,8 @@ function(set_target_link_libraries project_name)
     target_link_libraries(${project_name} PRIVATE
         ${X264_LIB}
         ${LIBCURL_LIBRARIES}
+        ${OPENSSL_SSL_LIBRARY}
+        ${OPENSSL_CRYPTO_LIBRARY}
         ${WEBRTC_LIBRARIES}
         ${WEBRTC_DEPENDENCIES}
     )
